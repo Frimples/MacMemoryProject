@@ -781,8 +781,10 @@ void m68k_set_instr_hook_callback(void  (*callback)(unsigned int pc))
 	CALLBACK_INSTR_HOOK = callback ? callback : default_instr_hook_callback;
 }
 
-/* Set the CPU type. */
-void m68k_set_cpu_type(struct m68ki_cpu_core *state, unsigned int cpu_type)
+unsigned int m68k_force_24bit_addressing = 0;
+
+/* Set the CPU type without applying the Mac SE bus-width override. */
+static void m68k_set_cpu_type_inner(struct m68ki_cpu_core *state, unsigned int cpu_type)
 {
 	switch(cpu_type)
 	{
@@ -805,7 +807,7 @@ void m68k_set_cpu_type(struct m68ki_cpu_core *state, unsigned int cpu_type)
 			HAS_FPU          = 0;
 			return;
 		case M68K_CPU_TYPE_SCC68070:
-			m68k_set_cpu_type(state, M68K_CPU_TYPE_68010);
+			m68k_set_cpu_type_inner(state, M68K_CPU_TYPE_68010);
 			CPU_ADDRESS_MASK = 0xffffffff;
 			CPU_TYPE         = CPU_TYPE_SCC070;
 			return;
@@ -954,6 +956,14 @@ void m68k_set_cpu_type(struct m68ki_cpu_core *state, unsigned int cpu_type)
 			HAS_FPU          = 0;
 			return;
 	}
+}
+
+/* Set the CPU type and then apply the effective address-bus width override. */
+void m68k_set_cpu_type(struct m68ki_cpu_core *state, unsigned int cpu_type)
+{
+	m68k_set_cpu_type_inner(state, cpu_type);
+	if (m68k_force_24bit_addressing)
+		state->address_mask = 0x00ffffff;
 }
 
 uint m68k_get_address_mask(m68ki_cpu_core *state) {

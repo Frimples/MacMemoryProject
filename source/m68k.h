@@ -319,6 +319,7 @@ void m68k_set_instr_hook_callback(void  (*callback)(unsigned int pc));
  * M68K_CPU_TYPE_EC020, and M68K_CPU_TYPE_68020.
  */
 void m68k_set_cpu_type(struct m68ki_cpu_core *state, unsigned int cpu_type);
+extern unsigned int m68k_force_24bit_addressing;
 
 /* Do whatever initialisations the core requires.  Should be called
  * at least once at init time.

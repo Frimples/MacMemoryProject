@@ -12,9 +12,11 @@ repository or the verified `macse-warpspeed` build.
 The `source/` directory is a clean copy of the verified
 `macse-warpspeed` physical-write-limiting codebase. It keeps the current
 `platform macse` path and adds one new configuration field and one CPU setup
-step: `force24bit 1` sets Musashi's effective address mask to `0x00ffffff`
-after the configured CPU is initialized. No legacy 24-bit patch code or
-alternate platform implementation is used.
+step: `force24bit 1` enables a setter-level CPU option. Every Musashi CPU-type
+initialization then clamps the effective address mask to `0x00ffffff` for the
+Mac SE, including 68020 and 68030 selection, rather than applying the mask only
+at one startup call site. No legacy 24-bit patch code or alternate platform
+implementation is used.
 
 The existing physical-write policy and full 4 MB `wtcram` mapping are retained.
 

@@ -684,11 +684,11 @@ switch_config:
 
   m68k_init();
   printf("Setting CPU type to %d.\n", cpu_type);
+  m68k_force_24bit_addressing =
+      (cfg->platform->id == PLATFORM_MACSE && cfg->force24bit) ? 1 : 0;
   m68k_set_cpu_type(&m68ki_cpu, cpu_type);
-  if (cfg->platform->id == PLATFORM_MACSE && cfg->force24bit) {
-  m68ki_cpu.address_mask = 0x00ffffff;
-  printf("[MACSE] Forced 24-bit address mask enabled (SE-compatible).\n");
-  }
+  if (m68k_force_24bit_addressing)
+    printf("[MACSE] Forced 24-bit address mask enabled (SE-compatible).\n");
   cpu_pulse_reset();
 
   pthread_t ipl_tid = 0, cpu_tid, kbd_tid;
