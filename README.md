@@ -35,7 +35,8 @@ The first configuration test is `configs/macse-force24bit.cfg`:
 
 ```text
 cpu 68030
-force24bit 1
+platform mac68k
+setvar force24bit 1
 map type=rom address=0x400000 size=1M file=macse.rom id=sysrom
 map type=wtcram address=0x000000 size=4M id=sysram
 ```
