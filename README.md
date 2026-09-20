@@ -31,7 +31,20 @@ test, not an assumed dependency. The original software expects a compatible
 68030 accelerator and accelerator RAM. We will not redistribute proprietary
 Connectix binaries.
 
-## Validation reference
+The first configuration test is `configs/macse-force24bit.cfg`:
+
+```text
+cpu 68030
+force24bit 1
+map type=rom address=0x400000 size=1M file=macse.rom id=sysrom
+map type=wtcram address=0x000000 size=4M id=sysram
+```
+
+It was built successfully on the Raspberry Pi native ARMHF environment from the
+isolated 24-bit source tree. The resulting uncommitted Pi artifact was verified
+as an ARMHF ELF executable and contained the `force24bit` parser and startup
+message. Hardware boot has not yet been tested with this configuration.
+
 
 Snow is an independent open-source classic Macintosh emulator that supports the
 SE family, 68030, 68851 PMMU, and detailed debugging. It may be used as a
