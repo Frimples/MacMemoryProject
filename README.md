@@ -7,6 +7,17 @@ translation.
 This repository is experimental. It does not modify the production PiStorm
 repository or the verified `macse-warpspeed` build.
 
+## Current implementation
+
+The `source/` directory is a clean copy of the verified
+`macse-warpspeed` physical-write-limiting codebase. It keeps the current
+`platform macse` path and adds one new configuration field and one CPU setup
+step: `force24bit 1` sets Musashi's effective address mask to `0x00ffffff`
+after the configured CPU is initialized. No legacy 24-bit patch code or
+alternate platform implementation is used.
+
+The existing physical-write policy and full 4 MB `wtcram` mapping are retained.
+
 ## Goal
 
 Test whether a Macintosh SE can use Pi-side memory for application allocations
@@ -35,16 +46,16 @@ The first configuration test is `configs/macse-force24bit.cfg`:
 
 ```text
 cpu 68030
-platform mac68k
-setvar force24bit 1
+platform macse
+force24bit 1
 map type=rom address=0x400000 size=1M file=macse.rom id=sysrom
 map type=wtcram address=0x000000 size=4M id=sysram
 ```
 
-It was built successfully on the Raspberry Pi native ARMHF environment from the
-isolated 24-bit source tree. The resulting uncommitted Pi artifact was verified
-as an ARMHF ELF executable and contained the `force24bit` parser and startup
-message. Hardware boot has not yet been tested with this configuration.
+The fresh source tree builds successfully in the Raspberry Pi native ARMHF
+environment. Its startup test confirms the `macse` platform, accepted
+`force24bit` option, forced `0x00ffffff` address mask, and 4 MB `wtcram`
+allocation. Hardware boot has not yet been tested with a private ROM.
 
 
 Snow is an independent open-source classic Macintosh emulator that supports the
@@ -73,7 +84,8 @@ A passing earlier layer is not evidence that a later layer works.
 
 - Keep all work in this repository or its own worktrees.
 - Do not alter `/home/xander/macSE_research/macse-warpspeed/` without explicit approval.
-- Do not use, copy, rename, compile, or retain the upstream `mac68k` platform.
+- Do not use, copy, rename, compile, or retain a legacy alternate platform
+  implementation for this test.
 - Do not commit ROM images, disk images, WADs, binaries, object files, credentials,
   or generated test artifacts.
 - Treat Snow and MAME as behavioral references; implement PiStorm behavior
@@ -84,6 +96,5 @@ A passing earlier layer is not evidence that a later layer works.
 
 ## Status
 
-Repository initialization. No PMMU or memory implementation is claimed yet.
-The first implementation should begin with host-side translation tests before
-modifying the PiStorm emulator.
+The fresh forced-24-bit test build is complete. This is address-mask behavior
+only; it is not a PMMU or extended-memory implementation.

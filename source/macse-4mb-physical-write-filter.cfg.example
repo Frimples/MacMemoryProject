@@ -1,0 +1,18 @@
+# Macintosh SE 4 MB physical-write filter test
+# Keep the complete Pi-side CPU RAM map. Do not split or overlap it.
+cpu 68000
+platform macse
+map type=rom address=0x400000 size=1M file=/home/pi/pistorm_latest_09172026/macse.rom id=sysrom
+map type=wtcram address=0x000000 size=4M id=sysram
+
+# Only these RAM ranges are written through to physical Macintosh RAM.
+# All other addresses below 0x400000 update Pi-side RAM but skip ps_write.
+# The final four ranges are the 4 MB SE's BBU-selected main/alternate video and sound buffers.
+# The 0x100000 range is retained as an empirical floppy-boot compatibility range.
+physwrite address=0x100000 size=1M
+physwrite address=0x3F2700 size=0x5580
+physwrite address=0x3FA100 size=740
+physwrite address=0x3FA700 size=0x5580
+physwrite address=0x3FFD00 size=740
+
+loopcycles 300
