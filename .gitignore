@@ -1,0 +1,13 @@
+*.rom
+*.ROM
+*.dsk
+*.img
+*.hda
+*.hdf
+*.wad
+*.bin
+*.APPL
+*.o
+build/
+artifacts/
+results/
